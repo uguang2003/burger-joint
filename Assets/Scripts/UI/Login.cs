@@ -19,8 +19,10 @@ public class Login : MonoBehaviour
     public Toggle isAudio;
     public Slider changeAudio;
 
-    public GameObject rPanel;   
+    public GameObject loginPanel;
+    public GameObject rPanel;
     public GameObject settingPanel;
+    public GameObject beginPanel;
 
     string user = "admin";
     string pass = "admin";
@@ -30,7 +32,8 @@ public class Login : MonoBehaviour
 
     public void OpenRPlane()
     { 
-       rPanel.SetActive(true);
+        loginPanel.SetActive(false);
+        rPanel.SetActive(true);
     }
 
     public void CloseRPlane()
@@ -39,49 +42,25 @@ public class Login : MonoBehaviour
         rPassword.text = "";
         rRPassword.text = "";
         rPanel.SetActive(false);
+        loginPanel.SetActive(true);
     }
 
     public void OpenSettingPlane()
     {
+        loginPanel.SetActive(false);
         settingPanel.SetActive(true);
     }
 
     public void CloseSettingPlane()
     {
         settingPanel.SetActive(false);
+        loginPanel.SetActive(true);
     }
 
-    public void Register()
+    public void returnMainMenu()
     {
-        user = rUseranem.text;
-        pass = rPassword.text;
-        if (rPassword.text == rRPassword.text)
-        {
-            rPanel.SetActive(false);
-        }
-        else
-        {
-            rPassword.text = "";
-            rRPassword.text = "";
-            pass = "";
-        }
-        rUseranem.text = "";
-        rPassword.text = "";
-        rRPassword.text = "";
-    }
-
-    public void LoginButton()
-    {
-        if (username.text == user && password.text == pass && tttext.text == ttext.text)
-        {
-            Debug.Log("µÇÂ¼³É¹¦");
-        }
-        else
-        {
-            Debug.Log("µÇÂ¼Ê§°Ü");
-        }
-        username.text = "";
-        password.text = "";
+        settingPanel.SetActive(false);
+        beginPanel.SetActive(true);
     }
 
     void Start()
@@ -106,5 +85,41 @@ public class Login : MonoBehaviour
         }
         ttext.text = code;
     }
+
+    public void Register()
+    {
+        user = rUseranem.text;
+        pass = rPassword.text;
+        if (rPassword.text == rRPassword.text && user != "" && pass != "")
+        {
+            rPanel.SetActive(false);
+            loginPanel.SetActive(true);
+        }
+        else
+        {
+            rPassword.text = "";
+            rRPassword.text = "";
+            pass = "";
+        }
+        rUseranem.text = "";
+        rPassword.text = "";
+        rRPassword.text = "";
+    }
+
+    public void LoginButton()
+    {
+        if (username.text == user && password.text == pass && tttext.text == ttext.text)
+        {
+            Loader.Load(Loader.Scene.GameScene);
+        }
+        else
+        {
+            username.text = "";
+            password.text = "";
+            ttext.text = "";
+            ChangeText();
+        }
+    }
+
 
 }
