@@ -6,7 +6,7 @@ using System.Threading;
 
 public class PlotText : MonoBehaviour
 {
-    public float speedTime = 0.15f;//打字间隔时间
+    public float speedTime = 0.1f;//打字间隔时间
 
     float timer;//计时器时间
     Text TextCompnt;//Text文字组件
@@ -16,11 +16,13 @@ public class PlotText : MonoBehaviour
 
     string wordContent;//----文字内容
 
+    public GameObject plotPanel;
+
     void Awake()
     {
         TextCompnt = this.GetComponent<Text>();//从当前物体获取到Text组件
         isStart = true;//bool值的默认值是false  所以这里要重置为true
-        wordContent = "你是一个没人要的孩子，直到有一天，\n你吃到了一个汉堡，从此展开了你的故事";
+        wordContent = "你是一个没人要的孩子，直到有一天，\n你吃到了一个汉堡，从此展开了你的故事...";
     }
 
     void FixedUpdate()
@@ -34,6 +36,9 @@ public class PlotText : MonoBehaviour
             timer += Time.deltaTime;//简单的计时器
             if (timer >= speedTime)//如果计时器时间>打字间隔时间
             {
+                //设置文字显示
+                TextCompnt.CrossFadeAlpha(1, 0, false);
+
                 timer = 0;//重置
                 wordNumber++;//文字数量+1
 
@@ -42,13 +47,26 @@ public class PlotText : MonoBehaviour
                 if (wordNumber >= wordContent.Length)//数字数量=文字的长度
                 {
                     isStart = false;//停止打字
+                    //设置文字渐隐
+                    TextCompnt.CrossFadeAlpha(0, 1.5f, false);
+                    timer -= 1.5f;
+                    //延迟1.5秒关闭plotPanel
+                    Invoke("ClosePlot", 1.5f);
                 }
                 else if (wordContent.Substring((wordNumber), 1) == "\n")
                 {
                     nNumber = wordNumber + 1;
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
+                    //设置文字渐隐
+                    //TextCompnt.CrossFadeAlpha(0, 1.5f, false);
+                    //timer -= 1.5f;
                 }
             }
         }
+    }
+
+    public void ClosePlot()
+    {
+        plotPanel.SetActive(false);
     }
 }
